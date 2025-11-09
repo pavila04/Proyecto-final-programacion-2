@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Turnos Médicos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- LOGIN -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <span class="logo-icon">🩺</span>
+            </div>
+            <h1>Ingreso al sistema</h1>
+            <p class="login-subtitle">
+                Usuario: <strong>admin</strong> o <strong>recepcion</strong> &nbsp;|&nbsp; Contraseña: <strong>1234</strong>
+            </p>
+            <form id="formLogin">
+                <div class="campo">
+                    <label for="usuario">Usuario</label>
+                    <input type="text" id="usuario" placeholder="Ej. admin" required>
+                </div>
+                <div class="campo">
+                    <label for="contrasena">Contraseña</label>
+                    <input type="password" id="contrasena" placeholder="••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Ingresar</button>
+                <p id="loginError" class="error"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div id="appContainer" class="app-layout oculto">
+        <header class="app-header">
+            <div class="header-left">
+                <div class="header-logo">
+                    <span class="logo-icon-sm">🩺</span>
+                </div>
+                <div>
+                    <h1>Sistema de Turnos Médicos</h1>
+                    <p>Gestión de citas para clínica</p>
+                </div>
+            </div>
+            <div class="usuario-info">
+                <span class="usuario-text">Sesión: <strong id="usuarioNombre"></strong></span>
+                <button id="btnLogout" class="btn-outline">Cerrar sesión</button>
+            </div>
+        </header>
+
+        <div class="app-body">
+            <!-- MENÚ LATERAL -->
+            <nav class="menu">
+                <button data-section-target="turnos" class="menu-btn menu-btn-active">
+                    📅 Coordinar citas
+                </button>
+                <button data-section-target="pacientes" class="menu-btn">
+                    🧑‍🦽 Pacientes
+                </button>
+                <button data-section-target="medicos" class="menu-btn">
+                    👨‍⚕️ Médicos
+                </button>
+            </nav>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <main class="main-content">
+                <!-- PANEL TURNOS -->
+                <section class="panel" data-section="turnos" id="panelTurnos">
+                    <h2>Coordinar cita</h2>
+                    <p class="panel-subtitle">Selecciona médico, paciente y horario para crear una nueva cita.</p>
+                    <form id="formCrearTurno" class="form-grid">
+                        <div class="campo">
+                            <label for="medicoId">Médico</label>
+                            <select id="medicoId" required></select>
+                        </div>
+
+                        <div class="campo">
+                            <label for="pacienteId">Paciente</label>
+                            <select id="pacienteId" required></select>
+                        </div>
+
+                        <div class="campo">
+                            <label for="servicioId">Servicio</label>
+                            <select id="servicioId" required></select>
+                        </div>
+
+                        <div class="campo">
+                            <label for="fecha">Fecha de la cita</label>
+                            <input type="date" id="fecha" required>
+                        </div>
+
+                        <div class="campo">
+                            <label for="hora">Hora de la cita</label>
+                            <input type="time" id="hora" required>
+                        </div>
+
+                        <div class="campo campo-full">
+                            <button type="submit" class="btn-primary">Crear turno</button>
+                        </div>
+
+                        <div class="campo-full">
+                            <p id="mensajeError" class="error"></p>
+                            <p id="mensajeExito" class="exito"></p>
+                        </div>
+                    </form>
+
+                    <div class="panel-divider"></div>
+
+                    <h2>Turnos del día</h2>
+                    <p class="panel-subtitle">Consulta las citas por fecha y por médico.</p>
+
+                    <div class="filters-grid">
+                        <div class="campo">
+                            <label for="medicoFiltroId">Médico (opcional)</label>
+                            <select id="medicoFiltroId">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+
+                        <div class="campo">
+                            <label for="fechaListado">Fecha</label>
+                            <div class="field-with-button">
+                                <input type="date" id="fechaListado">
+                                <button id="btnListarTurnos" type="button" class="btn-secondary">Listar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tabla-wrapper">
+                        <table id="tablaTurnos">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Médico</th>
+                                    <th>Paciente</th>
+                                    <th>Servicio</th>
+                                    <th>Fecha y hora</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- PANEL PACIENTES -->
+                <section class="panel oculto" data-section="pacientes" id="panelPacientes">
+                    <h2>Registrar paciente</h2>
+                    <p class="panel-subtitle">Datos básicos del paciente para control de la clínica.</p>
+                    <form id="formCrearPaciente" class="form-grid">
+                        <div class="campo">
+                            <label for="pacienteNombre">Nombre</label>
+                            <input type="text" id="pacienteNombre" required>
+                        </div>
+                        <div class="campo">
+                            <label for="pacienteApellido">Apellido</label>
+                            <input type="text" id="pacienteApellido" required>
+                        </div>
+                        <div class="campo">
+                            <label for="pacienteDpi">DPI / Documento</label>
+                            <input type="text" id="pacienteDpi">
+                        </div>
+                        <div class="campo">
+                            <label for="pacienteTelefono">Teléfono</label>
+                            <input type="text" id="pacienteTelefono">
+                        </div>
+                        <div class="campo">
+                            <label for="pacienteEmail">Correo electrónico</label>
+                            <input type="email" id="pacienteEmail">
+                        </div>
+                        <div class="campo">
+                            <label for="pacienteFechaNacimiento">Fecha de nacimiento</label>
+                            <input type="date" id="pacienteFechaNacimiento">
+                        </div>
+                        <div class="campo">
+                            <label for="pacienteSala">Sala / Área</label>
+                            <input type="text" id="pacienteSala" placeholder="Ejemplo: Sala 1, Emergencias">
+                        </div>
+
+                        <div class="campo campo-full">
+                            <button type="submit" class="btn-primary">Guardar paciente</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- PANEL MÉDICOS -->
+                <section class="panel oculto" data-section="medicos" id="panelMedicos">
+                    <h2>Registrar médico</h2>
+                    <p class="panel-subtitle">Datos del profesional que atenderá en la clínica.</p>
+                    <form id="formCrearMedico" class="form-grid">
+                        <div class="campo">
+                            <label for="medicoNombre">Nombre</label>
+                            <input type="text" id="medicoNombre" required>
+                        </div>
+                        <div class="campo">
+                            <label for="medicoApellido">Apellido</label>
+                            <input type="text" id="medicoApellido" required>
+                        </div>
+                        <div class="campo">
+                            <label for="medicoDpi">DPI / Documento</label>
+                            <input type="text" id="medicoDpi">
+                        </div>
+                        <div class="campo">
+                            <label for="medicoTelefono">Teléfono</label>
+                            <input type="text" id="medicoTelefono">
+                        </div>
+                        <div class="campo">
+                            <label for="medicoEmail">Correo electrónico</label>
+                            <input type="email" id="medicoEmail">
+                        </div>
+                        <div class="campo">
+                            <label for="medicoEspecialidad">Especialidad</label>
+                            <input type="text" id="medicoEspecialidad" required>
+                        </div>
+                        <div class="campo">
+                            <label for="medicoHoraInicio">Hora inicio</label>
+                            <input type="time" id="medicoHoraInicio" value="08:00">
+                        </div>
+                        <div class="campo">
+                            <label for="medicoHoraFin">Hora fin</label>
+                            <input type="time" id="medicoHoraFin" value="16:00">
+                        </div>
+
+                        <div class="campo campo-full">
+                            <button type="submit" class="btn-primary">Guardar médico</button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+
+        <footer class="app-footer">
+            <p>Desarrollado como proyecto final de Programación Orientada a Objetos</p>
+        </footer>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
